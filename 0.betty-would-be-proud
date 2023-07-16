@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# This script greets the user
+
+# Define variables
+name="Alice"
+greeting="Hello"
+
+# Display the greeting
+echo "$greeting, $name!"
+
+# Ask for user input
+read -p "What is your name? " user_name
+
+# Display a personalized greeting
+echo "Nice to meet you, $user_name!"
+

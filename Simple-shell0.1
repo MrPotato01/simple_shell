@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Define the prompt
+prompt="simple_shell > "
+
+# Display the prompt and wait for user input
+while true; do
+    read -p "$prompt" command_with_args
+
+    # Check for end of file condition
+    if [[ -z "$command_with_args" ]]; then
+        echo "Exiting the shell."
+        break
+    fi
+
+    # Split the command and arguments
+    command=$(echo "$command_with_args" | awk '{print $1}')
+    arguments=$(echo "$command_with_args" | awk '{for(i=2;i<=NF;++i)print $i}')
+
+    if [[ "$command" == "exit" ]]; then
+        echo "Exiting the shell."
+        break
+    elif [[ "$command" == "env" ]]; then
+        env
+    else
+        # Check if the command exists in the PATH
+        command_path=$(command -v "$command")
+        if [[ -n "$command_path" ]]; then
+            # Execute the command with arguments
+            "$command_path" $arguments
+        else
+            echo "Command not found: $command"
+        fi
+    fi
+done
+

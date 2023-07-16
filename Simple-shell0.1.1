@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Define the prompt
+prompt="simple_shell > "
+
+# Display the prompt and wait for user input
+while true; do
+    read -p "$prompt" command_with_args
+
+    # Check for end of file condition
+    if [[ -z "$command_with_args" ]]; then
+        echo "Exiting the shell."
+        break
+    fi
+
+    # Split the command and arguments
+    command=$(echo "$command_with_args" | awk '{print $1}')
+    argument=$(echo "$command_with_args" | awk '{print $2}')
+
+    if [[ "$command" == "exit" ]]; then
+        if [[ -n "$argument" ]]; then
+            if [[ "$argument" =~ ^[0-9]+$ ]]; then
+                echo "Exiting the shell with status: $argument"
+                exit "$argument"
+            else
+                echo "Invalid argument. Please provide an integer."
+            fi
+        else
+            echo "Exiting the shell."
+            exit 0
+        fi
+    else
+        # Check if the command exists in the PATH
+        command_path=$(command -v "$command")
+        if [[ -n "$command_path" ]]; then
+            # Execute the command with arguments
+            "$command_path" "${@:2}"
+        else
+            echo "Command not found: $command"
+        fi
+    fi
+done
